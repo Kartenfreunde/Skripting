@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+pycountry = "*"
+geopy = "*"
 
 [dev-packages]
 
