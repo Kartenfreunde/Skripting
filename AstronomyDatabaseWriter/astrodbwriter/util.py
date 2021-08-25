@@ -25,7 +25,14 @@ UNKNOWN = Unknown()
 
 
 def write_csv(file_name: str, lines: Sequence[Any]):
-    # TODO ensure that lines is not empty and all entries belong to the same class
+    # ensure argument validity
+    if len(lines) == 0:
+        raise ValueError("Cannot write empty database file")
+    first_type = type(lines[0])
+    if not all(isinstance(line, first_type) for line in lines):
+        raise ValueError("All line objects must be of same type")
+
+    # write file
     with open(file_name, 'w', newline='', encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=list(lines[0].__dict__.keys()), delimiter=";")
         writer.writeheader()
