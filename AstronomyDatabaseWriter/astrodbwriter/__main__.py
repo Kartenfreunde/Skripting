@@ -10,7 +10,7 @@ if __name__ == '__main__':
     pl = Planetarium(name="Testplanetarium",
                      location="Musterstadt",
                      address="Bahnhofstraße 1, 12345 Musterstadt",
-                     countryCode="DE",
+                     country_code="DE",
                      latitude=50,
                      longitude=10,
                      website=None,

@@ -55,7 +55,7 @@ class Planetarium:
     name:               str
     location:           str
     address:            Optional[str]
-    countryCode:        str  # ISO 3166 two-letter code
+    country_code:       str  # ISO 3166 two-letter code
     latitude:           float  # degree
     longitude:          float  # degree
     website:            Optional[str]
