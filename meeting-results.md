@@ -23,3 +23,11 @@ How to identify if a place belongs to more than one category? --> We'll add a fi
 
 ### Starten mit einem Ablaufplan 
 we use the bugtracker/issues section in this Github repository: https://github.com/astronomieatlas-deutschland/Skripting/issues
+
+## results from / Ergebnisse vom 30.08.2021
+
+- Vorstellung Stand aus Technikgruppe und, wie github-Repository funktioniert. Technik/Hosting --> Micha lädt Gerrit G. zum nächsten Treffen ein, 
+- Frage nach Internationalität des Projekts: Gruppe ist sehr offen für Mitarbeit über Ländergrenzen hinweg, Kontakte insbes. über Planetarium Society und IAU möglich.
+- Astrotreff: Benjamin fragt bei Matthias (Caros Kontakt)
+- astrospots.com : Micha fühlt mal vor, ob Zusammenarbeit gewünscht
+- Nächste Termine: 29.9. Technikrunde / 13.10. große Runde
