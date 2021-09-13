@@ -30,6 +30,7 @@ class OptomechanicalProjectorManufacturer(Enum):
     GOTO = "GOTO"
     SELF_MADE = "self-made"
     ZEISS = "Zeiss"
+    BERGER = "Astrogeräte Berger"
 
     def __str__(self):
         return self.value

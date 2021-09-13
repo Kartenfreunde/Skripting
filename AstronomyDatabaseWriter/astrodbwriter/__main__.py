@@ -1,29 +1,65 @@
-from category.planetarium import *
+import database
 import util
-
-# Entry point for the astronomy database writer.
-# To be continued...
+from category.planetarium import *
 
 if __name__ == '__main__':
     print("Hello World! This is the astronomy database writer.")
 
-    pl = Planetarium(name="Testplanetarium",
-                     location="Musterstadt",
-                     address="Bahnhofstraße 1, 12345 Musterstadt",
-                     country_code="DE",
-                     latitude=50,
-                     longitude=10,
-                     website=None,
-                     dome_diameter=10,
-                     dome_tilt=0,
-                     mobility=MobilityType.STATIONARY,
-                     seats=100,
-                     seat_arrangement=SeatArrangement.CONCENTRIC,
-                     optomechanical_projector="Zeiss Universarum IX",
-                     optomechanical_projector_manufacturer=OptomechanicalProjectorManufacturer.ZEISS,
-                     fulldome_software=None,
-                     fulldome_software_manufacturer=None,
-                     opening_year=2000,
-                     visitors_per_year=util.UNKNOWN)
+    test_data = [Planetarium(name="Sternwarte mit Planetarium Dieterskirchen",
+                             location="Dieterskirchen",
+                             address="Neunburger Straße 24, 92542 Dieterskirchen",
+                             country_code="DE",
+                             latitude=49.411389,
+                             longitude=12.404722,
+                             website="www.sternwarte-dieterskirchen.de",
+                             dome_diameter=6,
+                             dome_tilt=0,
+                             mobility=MobilityType.STATIONARY,
+                             seats=25,
+                             seat_arrangement=SeatArrangement.CONCENTRIC,
+                             optomechanical_projector="Polaris MK1",
+                             optomechanical_projector_manufacturer=OptomechanicalProjectorManufacturer.BERGER,
+                             fulldome_software="DigitalSky 2",
+                             fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
+                             opening_year=2014,
+                             visitors_per_year=3000),
+                 Planetarium(name="Nicolaus-Copernicus Planetarium Nürnberg",
+                             location="Nürnberg",
+                             address="Am Plärrer 41, 90429 Nürnberg",
+                             country_code="DE",
+                             latitude=49.447778,
+                             longitude=11.062778,
+                             website="www.planetarium-nuernberg.de",
+                             dome_diameter=18,
+                             dome_tilt=0,
+                             mobility=MobilityType.STATIONARY,
+                             seats=200,
+                             seat_arrangement=SeatArrangement.CONCENTRIC,
+                             optomechanical_projector="Zeiss Modell V",
+                             optomechanical_projector_manufacturer=OptomechanicalProjectorManufacturer.ZEISS,
+                             fulldome_software="DigitalSky 2",
+                             fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
+                             opening_year=1961,
+                             visitors_per_year=80000
+                             ),
+                 Planetarium(name="Planetarium Ursensollen",
+                             location="Ursensollen",
+                             address="Allmannsberger Weg 20, 92289 Ursensollen",
+                             country_code="DE",
+                             latitude=49.398056,
+                             longitude=11.74,
+                             website="www.planetarium-ursensollen.de",
+                             dome_diameter=6.6,
+                             dome_tilt=15,
+                             mobility=MobilityType.STATIONARY,
+                             seats=30,
+                             seat_arrangement=SeatArrangement.UNIDIRECTIONAL,
+                             optomechanical_projector=None,
+                             optomechanical_projector_manufacturer=None,
+                             fulldome_software="DigitalSky Dark Matter",
+                             fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
+                             opening_year=2019,
+                             visitors_per_year=util.UNKNOWN
+                             )]
 
-    util.write_csv("planetariums.csv", [pl])
+    database.publish_database(test_data)
