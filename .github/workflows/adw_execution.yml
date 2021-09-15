@@ -14,10 +14,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./AstronomyDatabaseWriter
     steps:
     - uses: actions/checkout@v2
-    - run: cd AstronomyDatabaseWriter
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
@@ -27,4 +28,4 @@ jobs:
         pip install pipenv
         pipenv install
     - name: Run ADW
-      run: pipenv run python AstronomyDatabaseWriter/astrodbwriter
+      run: pipenv run python astrodbwriter
