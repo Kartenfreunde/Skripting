@@ -27,4 +27,4 @@ jobs:
         pip install pipenv
         pipenv install
     - name: Run ADW
-      run: pipenv run python astrodbwriter
+      run: pipenv run python AstronomyDatabaseWriter/astrodbwriter
