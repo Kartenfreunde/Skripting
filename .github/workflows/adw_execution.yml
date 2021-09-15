@@ -1,0 +1,30 @@
+# Cyclic workflow to run the AstronomyDatabaseWriter
+
+name: Execute AstronomyDatabaseWriter
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron:  '0 6 * * SAT'
+  workflow_dispatch:
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: cd AstronomyDatabaseWriter
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install pipenv
+        pipenv install
+    - name: Run ADW
+      run: pipenv run astrodbwriter
