@@ -30,6 +30,16 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
         config_writer.set_value("user", "name", "AstronomyDatabaseWriter")
         config_writer.set_value("user", "email", "adw@t-online.de")
 
+    update_branch_found = False
+    for ref in local_repo.references:
+        if ref.name == "origin/" + UPDATE_BRANCH_NAME:
+            local_repo.git.checkout("-t", "origin/" + UPDATE_BRANCH_NAME)
+            update_branch_found = True
+            break
+
+    if not update_branch_found:
+        local_repo.git.checkout("-b", UPDATE_BRANCH_NAME)
+
     print("Clearing database repository...")
     for repoFile in os.listdir(TEMP_DATABASE_DIRECTORY):
         if repoFile == ".git":
@@ -52,7 +62,6 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
 
     print("Committing database changes to " + UPDATE_BRANCH_NAME)
 
-    local_repo.git.checkout("-b", UPDATE_BRANCH_NAME)
     local_repo.git.add(all=True)
     local_repo.git.commit(m="Automatic database update")
 
@@ -60,8 +69,10 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
         return
 
     print("Creating pull request for database changes")
-    local_repo.git.push("origin", UPDATE_BRANCH_NAME)
-    github_access = Github(os.environ[DATABASE_REPOSITORY_TOKEN_KEY])
+    token = os.environ[DATABASE_REPOSITORY_TOKEN_KEY]
+    local_repo.git.push(f"https://{DATABASE_REPOSITORY_USER}:{token}@github.com/"
+                        f"astronomieatlas-deutschland/Datenbank.git", UPDATE_BRANCH_NAME)
+    github_access = Github(token)
     github_repo = github_access.get_repo(DATABASE_REPOSITORY_NAME)
     if github_repo.get_pulls(state='open', base='main', head=UPDATE_BRANCH_NAME).totalCount == 0:
         github_repo.create_pull(
