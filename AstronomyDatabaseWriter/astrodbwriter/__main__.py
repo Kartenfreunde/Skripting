@@ -1,4 +1,5 @@
 import database
+import util
 from category.planetarium import *
 
 
@@ -39,6 +40,25 @@ def generate_test_data():
                         fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
                         opening_year=1961,
                         visitors_per_year=80000
+                        ),
+            Planetarium(name="Planetarium Ursensollen",
+                        location="Ursensollen",
+                        address="Allmannsberger Weg 20, 92289 Ursensollen",
+                        country_code="DE",
+                        latitude=49.398056,
+                        longitude=11.74,
+                        website="www.planetarium-ursensollen.de",
+                        dome_diameter=6.6,
+                        dome_tilt=15,
+                        mobility=MobilityType.STATIONARY,
+                        seats=30,
+                        seat_arrangement=SeatArrangement.UNIDIRECTIONAL,
+                        optomechanical_projector=None,
+                        optomechanical_projector_manufacturer=None,
+                        fulldome_software="DigitalSky Dark Matter",
+                        fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
+                        opening_year=2019,
+                        visitors_per_year=util.UNKNOWN
                         )]
 
 
