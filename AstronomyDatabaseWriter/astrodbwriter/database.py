@@ -68,21 +68,23 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
     if local_only:
         return
 
-    print("Creating pull request for database changes")
+    print("Pushing changes")
     token = os.environ[DATABASE_REPOSITORY_TOKEN_KEY]
     local_repo.git.push(f"https://{DATABASE_REPOSITORY_USER}:{token}@github.com/"
                         f"astronomieatlas-deutschland/Datenbank.git", UPDATE_BRANCH_NAME)
     github_access = Github(token)
     github_repo = github_access.get_repo(DATABASE_REPOSITORY_NAME)
     if github_repo.get_pulls(state='open', base='main', head=UPDATE_BRANCH_NAME).totalCount == 0:
+        print("Creating pull request")
         github_repo.create_pull(
             title="Automatic database update",
             body="Automatic database update",
             head=UPDATE_BRANCH_NAME,
             base="main"
         )
-
-    print("Database repository updated successfully. Pull request created.")
+        print("Pull request created. Database updated successfully.")
+    else:
+        print("Pull request does already exist. Database updated successfully.")
 
 
 def write_database(path: str, entries: Sequence[Planetarium]):
