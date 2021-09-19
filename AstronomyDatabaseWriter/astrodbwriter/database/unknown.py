@@ -1,4 +1,3 @@
-
 class Unknown:
     """
     Simple class with a single instance representing an unknown value in the database

@@ -3,7 +3,7 @@ import importlib.resources
 import os
 import shutil
 from collections.abc import Sequence
-from typing import Any, Optional, cast
+from typing import Any, Optional, cast, Dict
 
 import ResourceBundle.BundleTypes.BasicResourceBundle as res
 from ResourceBundle.exceptions import NotInResourceBundleError
@@ -11,21 +11,20 @@ import git
 from ResourceBundle.util.Locale import Locale
 from github import Github
 
-import resources
-from category.planetarium import Planetarium
+from .planetarium import Planetarium
 
 DATABASE_REPOSITORY_URL = "https://github.com/astronomieatlas-deutschland/Datenbank.git"
 DATABASE_REPOSITORY_NAME = "astronomieatlas-deutschland/Datenbank"
 DATABASE_REPOSITORY_USER = "astronomy-database-writer"
 DATABASE_REPOSITORY_EMAIL = "astronomy-database-writer@t-online.de"
 DATABASE_REPOSITORY_TOKEN_KEY = "DATABASE_REPOSITORY_TOKEN"
-TEMP_DATABASE_DIRECTORY = "database_temp"
-UPDATE_BRANCH_NAME = "unchecked_updates"
-
-LANGUAGES = ["de"]
+TEMP_DATABASE_DIRECTORY = "database_temp"  # dir to which the DB repository is cloned
+UPDATE_BRANCH_NAME = "unchecked_updates"  # the branch to which updates are published
+LANGUAGES = ["de"]  # supported languages
 
 
 def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
+    # the directory may already exist (e. g. from a previous run)
     if os.path.isdir(TEMP_DATABASE_DIRECTORY):
         git.rmtree(TEMP_DATABASE_DIRECTORY)
 
@@ -35,6 +34,8 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
         config_writer.set_value("user", "name", "AstronomyDatabaseWriter")
         config_writer.set_value("user", "email", "adw@t-online.de")
 
+    # check whether our branch already exists in the remote - if it does, we start our local
+    # update-branch from that and track it; otherwise, we create it starting at the main branch
     update_branch_found = False
     for ref in local_repo.references:
         if ref.name == "origin/" + UPDATE_BRANCH_NAME:
@@ -45,6 +46,7 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
     if not update_branch_found:
         local_repo.git.checkout("-b", UPDATE_BRANCH_NAME)
 
+    # now we clear the database and write it again from scratch
     print("Clearing database repository...")
     for repoFile in os.listdir(TEMP_DATABASE_DIRECTORY):
         if repoFile == ".git":
@@ -57,10 +59,11 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
 
     print("Writing database...")
     with open(os.path.join(TEMP_DATABASE_DIRECTORY, "README.md"), "w") as readme_file:
-        readme_file.write(importlib.resources.read_text(resources, "database_readme.md"))
+        readme_file.write(importlib.resources.read_text("database", "database_readme.md"))
 
     write_database(TEMP_DATABASE_DIRECTORY, entries)
 
+    # check if something has changed
     if not local_repo.is_dirty(untracked_files=True):
         print("Database did not change: No publishing necessary.")
         return
@@ -74,6 +77,7 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
         return
 
     print("Pushing changes")
+    # get the token that we need to authenticate at github
     token = os.environ[DATABASE_REPOSITORY_TOKEN_KEY]
     local_repo.git.push(f"https://{DATABASE_REPOSITORY_USER}:{token}@github.com/"
                         f"astronomieatlas-deutschland/Datenbank.git", UPDATE_BRANCH_NAME)
@@ -93,16 +97,23 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
 
 
 def write_database(path: str, entries: Sequence[Planetarium]):
+    """
+    Write the database using a three-level-structure: The root directory contains one directory per
+    format (csv, geojson, ...), which in turn contain one directory per language each (and one for
+    the raw, i. e. not translated, format). Each of those subdirectories contains a set of files
+    which comprise the database in the chosen format.
+    """
     csv_dir_path = os.path.join(path, "csv")
     os.mkdir(csv_dir_path)
-    raw_dir_path = os.path.join(csv_dir_path, "raw")
-    os.mkdir(raw_dir_path)
-    write_csv(os.path.join(raw_dir_path, f"planetariums_raw.csv"), None, entries)
-    for language in LANGUAGES:
-        lang_dir_path = os.path.join(csv_dir_path, language)
-        os.mkdir(lang_dir_path)
-        translations = cast(res.BasicResourceBundle, res.get_bundle("translations", Locale(language)))
-        write_csv(os.path.join(lang_dir_path, f"planetariums_{language}.csv"), translations, entries)
+    raw_csv_dir_path = os.path.join(csv_dir_path, "raw")
+    os.mkdir(raw_csv_dir_path)
+    write_csv(os.path.join(raw_csv_dir_path, f"planetariums_raw.csv"), None, entries)
+    for lang in LANGUAGES:
+        lang_csv_dir_path = os.path.join(csv_dir_path, lang)
+        os.mkdir(lang_csv_dir_path)
+        translations = cast(res.BasicResourceBundle, res.get_bundle("translations", Locale(lang)))
+        write_csv(os.path.join(lang_csv_dir_path, f"planetariums_{lang}.csv"),
+                  translations, entries)
 
 
 def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines: Sequence[Any]):
@@ -121,7 +132,7 @@ def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines:
         writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for line in lines:
-            row_dict = line.__dict__
+            row_dict: Dict[str, object] = line.__dict__
             if translations is not None:
                 row_dict = {translations.get(k): translate_value(v, translations)
                             for k, v in row_dict.items()}

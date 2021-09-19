@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import Optional, Union
 
-from util import Unknown
+from .unknown import Unknown
 
 
 @unique

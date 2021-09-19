@@ -1,6 +1,5 @@
 import database
-import util
-from category.planetarium import *
+from database.planetarium import *
 
 
 def generate_test_data():
@@ -58,7 +57,7 @@ def generate_test_data():
                         fulldome_software="DigitalSky Dark Matter",
                         fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
                         opening_year=2019,
-                        visitors_per_year=util.UNKNOWN
+                        visitors_per_year=database.UNKNOWN
                         )]
 
 
