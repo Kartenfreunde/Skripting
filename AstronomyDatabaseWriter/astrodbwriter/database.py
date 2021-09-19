@@ -3,13 +3,16 @@ import importlib.resources
 import os
 import shutil
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, Optional, cast
 
+import ResourceBundle.BundleTypes.BasicResourceBundle as res
+from ResourceBundle.exceptions import NotInResourceBundleError
 import git
+from ResourceBundle.util.Locale import Locale
 from github import Github
 
-from category.planetarium import Planetarium
 import resources
+from category.planetarium import Planetarium
 
 DATABASE_REPOSITORY_URL = "https://github.com/astronomieatlas-deutschland/Datenbank.git"
 DATABASE_REPOSITORY_NAME = "astronomieatlas-deutschland/Datenbank"
@@ -18,6 +21,8 @@ DATABASE_REPOSITORY_EMAIL = "astronomy-database-writer@t-online.de"
 DATABASE_REPOSITORY_TOKEN_KEY = "DATABASE_REPOSITORY_TOKEN"
 TEMP_DATABASE_DIRECTORY = "database_temp"
 UPDATE_BRANCH_NAME = "unchecked_updates"
+
+LANGUAGES = ["de"]
 
 
 def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
@@ -88,10 +93,19 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
 
 
 def write_database(path: str, entries: Sequence[Planetarium]):
-    write_csv(os.path.join(path, "planetariums.csv"), entries)
+    csv_dir_path = os.path.join(path, "csv")
+    os.mkdir(csv_dir_path)
+    raw_dir_path = os.path.join(csv_dir_path, "raw")
+    os.mkdir(raw_dir_path)
+    write_csv(os.path.join(raw_dir_path, f"planetariums_raw.csv"), None, entries)
+    for language in LANGUAGES:
+        lang_dir_path = os.path.join(csv_dir_path, language)
+        os.mkdir(lang_dir_path)
+        translations = cast(res.BasicResourceBundle, res.get_bundle("translations", Locale(language)))
+        write_csv(os.path.join(lang_dir_path, f"planetariums_{language}.csv"), translations, entries)
 
 
-def write_csv(path: str, lines: Sequence[Any]):
+def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines: Sequence[Any]):
     # ensure argument validity
     if len(lines) == 0:
         raise ValueError("Cannot write empty database file")
@@ -101,7 +115,21 @@ def write_csv(path: str, lines: Sequence[Any]):
 
     # write file
     with open(path, 'w', newline='', encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=list(lines[0].__dict__.keys()), delimiter=";")
+        fieldnames = list(lines[0].__dict__.keys())
+        if translations is not None:
+            fieldnames = [translations.get(f) for f in fieldnames]
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for line in lines:
-            writer.writerow(line.__dict__)
+            row_dict = line.__dict__
+            if translations is not None:
+                row_dict = {translations.get(k): translate_value(v, translations)
+                            for k, v in row_dict.items()}
+            writer.writerow(row_dict)
+
+
+def translate_value(value: object, resource_bundle: res.BasicResourceBundle) -> str:
+    try:
+        return resource_bundle.get(str(value))
+    except NotInResourceBundleError:
+        return str(value)

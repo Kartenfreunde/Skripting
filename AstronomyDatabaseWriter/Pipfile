@@ -9,6 +9,7 @@ pycountry = "*"
 geopy = "*"
 gitpython = "*"
 pygithub = "*"
+resourcebundle = "*"
 
 [dev-packages]
 
