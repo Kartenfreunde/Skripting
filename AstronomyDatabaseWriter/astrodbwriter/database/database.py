@@ -5,7 +5,7 @@ import pathlib
 import shutil
 from collections.abc import Sequence
 from typing import Any, Optional, cast, Dict
-import locale
+from babel.numbers import format_decimal
 
 import ResourceBundle.BundleTypes.BasicResourceBundle as res
 from ResourceBundle.exceptions import NotInResourceBundleError
@@ -110,17 +110,14 @@ def write_database(path: str, entries: Sequence[Planetarium]):
     raw_csv_dir_path = os.path.join(csv_dir_path, "raw")
     os.mkdir(raw_csv_dir_path)
     write_csv(os.path.join(raw_csv_dir_path, f"planetariums_raw.csv"), None, entries)
-    translations_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "translations")
-    for lang in LANGUAGES:
-        lang_csv_dir_path = os.path.join(csv_dir_path, lang)
+    for language in LANGUAGES:
+        lang_csv_dir_path = os.path.join(csv_dir_path, language)
         os.mkdir(lang_csv_dir_path)
-        translations = cast(res.BasicResourceBundle, res.get_bundle(translations_path, Locale(lang)))
-        locale.setlocale(locale.LC_NUMERIC, lang)  # ensure that numbers are formatted correctly
-        write_csv(os.path.join(lang_csv_dir_path, f"planetariums_{lang}.csv"),
-                  translations, entries)
+        write_csv(os.path.join(lang_csv_dir_path, f"planetariums_{language}.csv"),
+                  language, entries)
 
 
-def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines: Sequence[Any]):
+def write_csv(path: str, language: Optional[str], lines: Sequence[Any]):
     # ensure argument validity
     if len(lines) == 0:
         raise ValueError("Cannot write empty database file")
@@ -131,23 +128,38 @@ def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines:
     # write file
     with open(path, 'w', newline='', encoding="utf-8") as file:
         fieldnames = list(lines[0].__dict__.keys())
-        if translations is not None:
-            fieldnames = [translations.get(f) for f in fieldnames]
+        if language is not None:
+            fieldnames = [translate(f, language) for f in fieldnames]
         writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for line in lines:
             row_dict: Dict[str, object] = line.__dict__
-            if translations is not None:
-                row_dict = {translations.get(k): translate_value(v, translations)
+            if language is not None:
+                # fallback to not translated for values, since they may contain e. g. names of
+                # locations, which can and should not be translated
+                row_dict = {translate(k, language): translate(v, language, True)
                             for k, v in row_dict.items()}
             writer.writerow(row_dict)
 
 
-def translate_value(value: object, resource_bundle: res.BasicResourceBundle) -> str:
+resource_bundle_cache: Dict[str, res.BasicResourceBundle] = {}
+
+
+def translate(value: object, language: str, fallback: bool = False) -> str:
+    # first of all, format floats correctly by using the babel module
     if isinstance(value, float):
-        return "{0:n}".format(value)
+        return format_decimal(value, locale=language)
+
+    # otherwise, check if we have a translation in a resource file for this
+    if language not in resource_bundle_cache:
+        translations_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "translations")
+        resource_bundle_cache[language] = cast(res.BasicResourceBundle,
+                                               res.get_bundle(translations_path, Locale(language)))
+    resource_bundle = resource_bundle_cache[language]
 
     try:
         return resource_bundle.get(str(value))
-    except NotInResourceBundleError:
-        return str(value)
+    except NotInResourceBundleError as error:
+        if fallback:
+            return str(value)
+        raise error
