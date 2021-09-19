@@ -1,6 +1,7 @@
 import csv
 import importlib.resources
 import os
+import pathlib
 import shutil
 from collections.abc import Sequence
 from typing import Any, Optional, cast, Dict
@@ -108,10 +109,11 @@ def write_database(path: str, entries: Sequence[Planetarium]):
     raw_csv_dir_path = os.path.join(csv_dir_path, "raw")
     os.mkdir(raw_csv_dir_path)
     write_csv(os.path.join(raw_csv_dir_path, f"planetariums_raw.csv"), None, entries)
+    translations_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "translations")
     for lang in LANGUAGES:
         lang_csv_dir_path = os.path.join(csv_dir_path, lang)
         os.mkdir(lang_csv_dir_path)
-        translations = cast(res.BasicResourceBundle, res.get_bundle("translations", Locale(lang)))
+        translations = cast(res.BasicResourceBundle, res.get_bundle(translations_path, Locale(lang)))
         write_csv(os.path.join(lang_csv_dir_path, f"planetariums_{lang}.csv"),
                   translations, entries)
 
