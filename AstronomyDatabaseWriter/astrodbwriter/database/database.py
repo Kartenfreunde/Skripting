@@ -5,6 +5,7 @@ import pathlib
 import shutil
 from collections.abc import Sequence
 from typing import Any, Optional, cast, Dict
+import locale
 
 import ResourceBundle.BundleTypes.BasicResourceBundle as res
 from ResourceBundle.exceptions import NotInResourceBundleError
@@ -114,6 +115,7 @@ def write_database(path: str, entries: Sequence[Planetarium]):
         lang_csv_dir_path = os.path.join(csv_dir_path, lang)
         os.mkdir(lang_csv_dir_path)
         translations = cast(res.BasicResourceBundle, res.get_bundle(translations_path, Locale(lang)))
+        locale.setlocale(locale.LC_NUMERIC, lang)  # ensure that numbers are formatted correctly
         write_csv(os.path.join(lang_csv_dir_path, f"planetariums_{lang}.csv"),
                   translations, entries)
 
@@ -142,6 +144,9 @@ def write_csv(path: str, translations: Optional[res.BasicResourceBundle], lines:
 
 
 def translate_value(value: object, resource_bundle: res.BasicResourceBundle) -> str:
+    if isinstance(value, float):
+        return "{0:n}".format(value)
+
     try:
         return resource_bundle.get(str(value))
     except NotInResourceBundleError:
