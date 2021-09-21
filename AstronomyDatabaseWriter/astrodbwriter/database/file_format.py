@@ -57,6 +57,9 @@ _resource_bundle_cache: Dict[str, res.BasicResourceBundle] = {}
 
 
 def _translate(value: object, language: str, fallback: bool = False) -> str:
+    if value is None:
+        return ""
+
     # first of all, format floats correctly by using the babel module
     if isinstance(value, float):
         return format_decimal(value, locale=language)
