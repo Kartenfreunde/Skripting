@@ -1,8 +1,8 @@
 ## Open questions / Zu klären
 
 1. How should the data/UI be hosted? Stefan offers webspace/-server, if needed.
-1. How many separate tables for categories do we need?
-1. Wie stellen wir sicher, dass bei automatischen Aktualisierungen und Datenabruf aus mehreren Quellen keine Duplikate auftreten?
+1. How many separate tables for categories do we need? --> see https://github.com/astronomieatlas-deutschland/Skripting/issues/1
+1. How do we make sure that no duplicates are created when parsing data automatically from different sources? (Wie stellen wir sicher, dass bei automatischen Aktualisierungen und Datenabruf aus mehreren Quellen keine Duplikate auftreten?)
 
 ## results from / Ergebnisse vom 25.08.2021
 
