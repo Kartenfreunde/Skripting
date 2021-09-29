@@ -52,7 +52,7 @@ def generate_test_data():
                         mobility=MobilityType.STATIONARY,
                         seats=30,
                         seat_arrangement=SeatArrangement.UNIDIRECTIONAL,
-                        optomechanical_projector="Zeiss Universarium",
+                        optomechanical_projector=None,
                         optomechanical_projector_manufacturer=None,
                         fulldome_software="DigitalSky Dark Matter",
                         fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
