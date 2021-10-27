@@ -1,3 +1,9 @@
+# Welcome 
+
+This is the German Amateur Astronomer Association's map project. We want to create
+
+* an interactive map for anyone interested in places of astronomical interest (POAI)
+
 # Skripting
 Skripte zur automatisierten Zusammenstellung von Kartendaten
 
