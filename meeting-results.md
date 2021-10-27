@@ -3,6 +3,13 @@
 1. How should the data/UI be hosted? Stefan offers webspace/-server, if needed.
 1. How many separate tables for categories do we need? --> see https://github.com/astronomieatlas-deutschland/Skripting/issues/1
 1. How do we make sure that no duplicates are created when parsing data automatically from different sources? (Wie stellen wir sicher, dass bei automatischen Aktualisierungen und Datenabruf aus mehreren Quellen keine Duplikate auftreten?)
+1. We have to clarify what copyrights can be held on geographic metadata, i.e. how much geographic data we can copy from different sources. Daniel asks a friend about the law situation. Law information to OpenStreetMap: https://wiki.openstreetmap.org/wiki/Using_OpenStreetMap
+
+## results from / Ergebnisse vom 27.10.2021
+
+Michael reports that the VdS is creating a new information brochure with a map on the back showing all VdS member observatories / clubs. It would be great to have a draft map until end of the year. Fabian helps at least with getting the coordinates of the observatories and maybe also with creating the map.
+
+Benjamin stays in contact with the Gesellschaft für Chronometrie e. V. regarding the questions about sundials and talks with Olaf Kretzer about astronomical places in Thüringen.
 
 ## results from / Ergebnisse vom 25.08.2021
 
