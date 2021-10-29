@@ -53,7 +53,7 @@ class FulldomeSoftwareManufacturer(Enum):
 @dataclass(frozen=True)
 class Planetarium:
 
-    name:               str
+    institution:        str
     location:           str
     address:            Optional[str]
     country_code:       str  # ISO 3166 two-letter code
@@ -75,8 +75,8 @@ class Planetarium:
 
     def __eq__(self, other):
         return isinstance(other, Planetarium)\
-               and self.name == other.name\
+               and self.institution == other.institution\
                and self.location == other.location
 
     def __hash__(self):
-        return hash((self.name, self.location))
+        return hash((self.institution, self.location))

@@ -3,7 +3,7 @@ from database.planetarium import *
 
 
 def generate_test_data():
-    return [Planetarium(name="Sternwarte mit Planetarium Dieterskirchen",
+    return [Planetarium(institution="Sternwarte mit Planetarium Dieterskirchen",
                         location="Dieterskirchen",
                         address="Neunburger Straße 24, 92542 Dieterskirchen",
                         country_code="DE",
@@ -21,7 +21,7 @@ def generate_test_data():
                         fulldome_software_manufacturer=FulldomeSoftwareManufacturer.SKY_SKAN,
                         opening_year=2014,
                         visitors_per_year=3000),
-            Planetarium(name="Nicolaus-Copernicus Planetarium Nürnberg",
+            Planetarium(institution="Nicolaus-Copernicus Planetarium Nürnberg",
                         location="Nürnberg",
                         address="Am Plärrer 41, 90429 Nürnberg",
                         country_code="DE",
@@ -40,7 +40,7 @@ def generate_test_data():
                         opening_year=1961,
                         visitors_per_year=80000
                         ),
-            Planetarium(name="Planetarium Ursensollen",
+            Planetarium(institution="Planetarium Ursensollen",
                         location="Ursensollen",
                         address="Allmannsberger Weg 20, 92289 Ursensollen",
                         country_code="DE",
