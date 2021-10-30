@@ -135,8 +135,8 @@ def _get_website(html: Tag) -> Optional[str]:
         return None
     url: str = url_tag["href"]
     # for consistent formatting, ensure that the URL starts with "www" and remove any protocol info
-    url.removeprefix("http://")
-    url.removeprefix("https://")
+    url = url.removeprefix("http://")
+    url = url.removeprefix("https://")
     if not url.startswith("www."):
         url = "www." + url
     # also remove any path information
