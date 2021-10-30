@@ -12,6 +12,9 @@ pygithub = "*"
 resourcebundle = "*"
 babel = "*"
 geojson = "*"
+beautifulsoup4 = "*"
+geocoder = "*"
+requests = "*"
 
 [dev-packages]
 

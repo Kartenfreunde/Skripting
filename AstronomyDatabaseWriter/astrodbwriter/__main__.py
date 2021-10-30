@@ -1,4 +1,5 @@
 import database
+from crawler import gdp
 from database.planetarium import *
 
 
@@ -63,4 +64,4 @@ def generate_test_data():
 
 if __name__ == '__main__':
     print("Hello World! This is the astronomy database writer.")
-    database.publish_database(generate_test_data())
+    database.publish_database(gdp.retrieve_data())
