@@ -1,5 +1,4 @@
 import importlib.resources
-import importlib.resources
 import os
 import shutil
 from collections.abc import Sequence
@@ -91,7 +90,7 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
     # get the token that we need to authenticate at github
     token = os.environ[DATABASE_REPOSITORY_TOKEN_KEY]
     local_repo.git.push(f"https://{DATABASE_REPOSITORY_USER}:{token}@github.com/"
-                        f"astronomieatlas-deutschland/Datenbank.git", UPDATE_BRANCH_NAME)
+                        f"{DATABASE_REPOSITORY_NAME}.git", UPDATE_BRANCH_NAME)
     github_access = Github(token)
     github_repo = github_access.get_repo(DATABASE_REPOSITORY_NAME)
     if github_repo.get_pulls(state='open', base='main', head=UPDATE_BRANCH_NAME).totalCount == 0:
