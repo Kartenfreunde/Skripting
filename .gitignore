@@ -1,1 +1,3 @@
 /AstronomyDatabaseWriter/astrodbwriter/database_temp/
+/DataSourceWatcher/datasourcewatcher/snapshots_temp/
+__pycache__/
