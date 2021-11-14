@@ -68,8 +68,8 @@ def publish_database(entries: Sequence[Planetarium], local_only: bool = False):
             os.remove(repo_file_path)
 
     print("Writing database...")
-    with open(os.path.join(TEMP_DATABASE_DIRECTORY, "README.md"), "w") as readme_file:
-        readme_file.write(importlib.resources.read_text("database", "database_readme.md"))
+    shutil.copy(os.path.join(os.path.dirname(__file__), "database_readme.md"),
+                os.path.join(TEMP_DATABASE_DIRECTORY, "README.md"))
 
     write_database(TEMP_DATABASE_DIRECTORY, entries)
 
