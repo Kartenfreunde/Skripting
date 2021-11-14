@@ -1,5 +1,5 @@
 import requests
-import urlcheck
+import urlsnapshot
 
 
 URLS = ['https://www.gdp-planetarium.org/planetarien/liste-der-planetarien/d-ost',
@@ -10,4 +10,4 @@ URLS = ['https://www.gdp-planetarium.org/planetarien/liste-der-planetarien/d-ost
 
 
 if __name__ == '__main__':
-    urlcheck.publish_snapshots({url: requests.get(url).text for url in URLS})
+    urlsnapshot.publish_snapshots({url: requests.get(url).text for url in URLS})
