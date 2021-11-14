@@ -11,8 +11,8 @@ from github import Github
 from . import file_format
 from .planetarium import Planetarium
 
-DATABASE_REPOSITORY_URL = "https://github.com/astronomieatlas-deutschland/Datenbank.git"
-DATABASE_REPOSITORY_NAME = "astronomieatlas-deutschland/Datenbank"
+DATABASE_REPOSITORY_URL = "https://github.com/astronomieatlas-deutschland/database.git"
+DATABASE_REPOSITORY_NAME = "astronomieatlas-deutschland/database"
 DATABASE_REPOSITORY_USER = "astronomy-database-writer"
 DATABASE_REPOSITORY_EMAIL = "astronomy-database-writer@t-online.de"
 DATABASE_REPOSITORY_TOKEN_KEY = "DATABASE_REPOSITORY_TOKEN"
