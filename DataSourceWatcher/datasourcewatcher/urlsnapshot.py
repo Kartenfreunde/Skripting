@@ -1,4 +1,3 @@
-import importlib.resources
 import os
 import re
 import shutil
@@ -52,8 +51,8 @@ def publish_snapshots(snapshots: Dict[str, str], local_only=False):
             os.remove(repo_file_path)
 
     print("Writing snapshots...")
-    with open(os.path.join(TEMP_SNAPSHOT_DIRECTORY, "README.md"), "w") as readme_file:
-        readme_file.write(importlib.resources.read_text("datasourcewatcher", "snapshots_readme.md"))
+    shutil.copy(os.path.join(os.path.dirname(__file__), "snapshots_readme.md"),
+                os.path.join(TEMP_SNAPSHOT_DIRECTORY, "README.md"))
 
     _write_snapshots(TEMP_SNAPSHOT_DIRECTORY, snapshots)
 
