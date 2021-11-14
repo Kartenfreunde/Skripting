@@ -1,0 +1,33 @@
+# Cyclic workflow to run the DataSourceWatcher
+
+name: Execute DataSourceWatcher
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron:  '0 6 * * SAT'
+  workflow_dispatch:
+
+
+jobs:
+  update-snapshots:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./DataSourceWatcher
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install pipenv
+        pipenv install
+    - name: Run DSW
+      env:
+        SNAPSHOT_REPOSITORY_TOKEN: ${{ secrets.SNAPSHOT_REPOSITORY_TOKEN }}
+      run: pipenv run python datasourcewatcher
