@@ -2,12 +2,13 @@
 
 This is the German Amateur Astronomer Association's (www.sternfreunde.de) map project. We want to create an interactive map for anyone interested in places of astronomical interest (POAI). Intended features of the map:
 
-* Embedable on any website like a widget (e.g. for astronomy clubs or media)
-* Filter functions to (de-)select certain categories (e.g. observatories, planetariums, dark sky areas …)
+* Shows places and areas, data collected and automatically updated from different sources
+* Filter function to (de-)select certain categories (e.g. observatories, planetariums, dark sky areas …)
 * Switchable overlays:
   * Light pollution
   * Terrain data
 * Search field for addresses and locations 
+* Embedable on any website like a widget (e.g. for astronomy clubs or media)
 
 The coding is done in this repository named "scripting". The results of the scripts are then collected in the repository "[database](https://github.com/astronomieatlas-deutschland/database)"
 
