@@ -100,5 +100,5 @@ def _write_snapshots(path: str, snapshots: Dict[str, str]):
             file = file.strip("_")
         file += ".html"
         os.makedirs(os.path.join(path, subdir), exist_ok=True)
-        with open(os.path.join(path, subdir, file), "w") as f:
+        with open(os.path.join(path, subdir, file), "w", encoding="utf-8") as f:
             f.write(content)
