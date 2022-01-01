@@ -19,9 +19,13 @@ def _gdp_html(url: str):
     return BeautifulSoup(requests.get(url).text, "html.parser").find("div", {"class": "content100"}).prettify()
 
 
+def _redshift_html(url: str):
+    return BeautifulSoup(requests.get(url).text, "html.parser").find("div", {"id": "magazine_article_detail_content"}).prettify()
+
+
 if __name__ == '__main__':
     snapshots = {url: _gdp_html(url) for url in GDP_URLS}
     snapshots[APLF_URL] = requests.get(APLF_URL).text
     snapshots[ZVSD_URL] = requests.get(ZVSD_URL).text
-    snapshots[REDSHIFT_URL] = requests.get(REDSHIFT_URL).text
+    snapshots[REDSHIFT_URL] = _redshift_html(REDSHIFT_URL)
     urlsnapshot.publish_snapshots(snapshots)
